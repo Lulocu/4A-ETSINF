@@ -1,0 +1,4 @@
+Definir template casa con slot categoria, edadAparente,ValorCatastral,NºVentanas) todo con valores crisp
+Definir cateogoria, edad aparente, valor catastral, para valores dofisps
+Definir reglas difusas
+Definir ultima relga para desifusicar el valor ultimo final y qu e ponga el valor crisp que toca a la casa
