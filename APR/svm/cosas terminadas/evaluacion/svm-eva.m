@@ -12,8 +12,9 @@ filename = "mnistRes.out";
 fid = fopen(filename,"w");
 res = svmtrain(xl,X,'-t 1 -d 2');
 test = svmpredict(yl,Y,res);
-error = sum(test!=yl)/length(yl) * 100;
-intervalo=1.96*sqrt((error*(1-error))/length(yl))
+error = sum(test!=yl)/length(yl)
+acurancia = (1 -error)
+intervalo=1.96*sqrt((error*acurancia)/length(yl))
 
-fprintf(fid," Error:%.1f \t Intervalo de confianza +-v %.4f\n",error,intervalo);
+fprintf(fid," Error:%.4d \t Intervalo de confianza [%.4d , %4d]\n",error,error - intervalo, error + intervalo);
 fclose(fid);

@@ -5,7 +5,7 @@
 # de tipo eps "encapsulated postscript" que es un formato vectorial que
 # garantiza un escalado arbitráreo de las gráficas sin efectos de pixelado
 
-set terminal postscript eps font "Helvetica,24"
+set terminal postscript eps color font "Helvetica,24"
 
 # Otro tipo de fichero que puede generar gnuplot es JPEG, que es un
 # tipo ampliamente conocido de mapa de bits (no vectorial), pero que
@@ -16,7 +16,7 @@ set terminal postscript eps font "Helvetica,24"
 # Nombre del fichero de salida
 #
 
-set output "pca+knn-exp.eps"
+set output "mixGaussian.eps"
 
 # Establece que los ejes estén en escala logarítmica
 # para observar más fácilmente valores muy cercanos entre si
@@ -50,7 +50,7 @@ set ytics ("1" 1, "2" 2, "5" 5, "10" 10, "20" 20, "50" 50, "100" 100)
 
 set label "Numero mixturas" at 100,1.5 right
 set label "Error (%)" at 0.92,85 left
-set label "Mixturas alpha = 1e-5" at 0.92,50 left font "HelveticaBold,20"
+set label "Mixturas alpha = 1e-3" at 0.92,50 left font "HelveticaBold,20"
 
 
 # El comando plot representa las dos curvas que aparecen en la
@@ -81,7 +81,7 @@ set label "Mixturas alpha = 1e-5" at 0.92,50 left font "HelveticaBold,20"
 # el tipo de curva es una línea "with line" (w l) cuyo linewidth es 4 (lw 4)
 # y el tipo de línea es la 2 (lt 2)
 
-plot "5/10.out" u 3:4 t "PCA: 10 dimension" w lp lw 2 lt 1 ps 2.0, "5/20.out" u 3:4 t "PCA: 20 dimension" w lp lw 2 lt 1 ps 2.0,  "5/50.out" u 3:4 t "PCA: 50 dimension" w lp lw 2 lt 1 ps 2.0,  "5/100.out" u 3:4 t "PCA: 100 dimension" w lp lw 2 lt 1 ps 2.0
+plot "3/10.out" u 3:4 t "PCA: 10 dimension" w lp lw 2 lt rgb "red" ps 2.0, "3/20.out" u 3:4 t "PCA: 20 dimension" w lp lw 2 lt rgb "green" ps 2.0,  "3/50.out" u 3:4 t "PCA: 50 dimension" w lp lw 2 lt rgb "blue" ps 2.0,  "3/100.out" u 3:4 t "PCA: 100 dimension" w lp lw 2 lt rgb "black" ps 2.0
 # Si quieres saber más sobre los anchos de línea, tipos de línea/punto, etc. ejecuta
 # "gnuplot" desde el interprete de comandos, y dentro de gnuplot ejecuta el comando "test"
 #"5/1.out" u 3:4 t "PCA: 1 dimension" w lp lw 2 lt 1 ps 2.0,
