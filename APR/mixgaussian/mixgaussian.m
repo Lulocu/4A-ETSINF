@@ -39,32 +39,39 @@ end
 epsilon = 1e-4;
 L=-inf;
 it=0;
-printf(" It          oL           L  errX  errY\n");
-printf("--- ----------- ----------- ----- -----\n");
+%printf(" It          oL           L  errX  errY\n");
+%printf("--- ----------- ----------- ----- -----\n");
 do 
   oL=L;L=0;
 
   % For each class	  
   for c=classes'
-    % E step: Estimate zk
+    % E step: Estimate znk
     ic=find(c==classes);
     idc=find(xl==c);
     Nc=rows(idc);
     Xc=X(idc,:);
-    zk=[];
+    z=[];
     for k=1:K
-      zk(:,k)=compute_zk(ic,k,pkGc,mu,sigma,Xc);
+      z(:,k)=compute_zk(ic,k,pkGc,mu,sigma,Xc);
     end
     % Robust computation of znk and log-likelihood
-    maxzk=max(zk,[],2);
-    zk=exp(zk-maxzk);
-    sumzk=sum(zk,2);
-    zk=zk./sumzk;
-    L=L+Nc*log(pc(ic))+sum(maxzk+log(sumzk));
+    maxz=max(z,[],2);
+    z=exp(z-maxz);
+    sumz=sum(z,2);
+    z=z./sumz;
+    L=L+Nc*log(pc(ic))+sum(maxz+log(sumz));
 
     % M step: parameter update
     % HERE YOUR CODE FOR PARAMETER ESTIMATION
-
+    sumz = sum(z);
+    pkGc{ic} = sumz/Nc;
+    mu{ic} = (Xc'*z)./sumz;
+    for k = 1:K 
+    matcov  = ((Xc-mu{ic}(:,k)')' * (z(:,k).*(Xc-mu{ic}(:,k)')))/sumz(k);
+    sigma(ic,k) = alpha*matcov+(1-alpha)*eye(D);
+    end
+    
   end
 
   % Likelihood divided by the number of training samples
@@ -74,26 +81,26 @@ do
   for c=classes'
     ic=find(c==classes);
     % Training set
-    zk=[];
+    z=[];
     for k=1:K
-      zk(:,k)=compute_zk(ic,k,pkGc,mu,sigma,X);
+      z(:,k)=compute_zk(ic,k,pkGc,mu,sigma,X);
     end
     % Robust computation of znk
-    maxzk=max(zk,[],2);
-    zk=exp(zk-maxzk);
-    sumzk=sum(zk,2);
-    gX(:,ic)=log(pc(ic))+maxzk+log(sumzk);
+    maxz=max(z,[],2);
+    z=exp(z-maxz);
+    sumz=sum(z,2);
+    gX(:,ic)=log(pc(ic))+maxz+log(sumz);
 
     % Evaluation set
-    zk=[];
+    z=[];
     for k=1:K
-      zk(:,k)=compute_zk(ic,k,pkGc,mu,sigma,Y);
+      z(:,k)=compute_zk(ic,k,pkGc,mu,sigma,Y);
     end
     % Robust computation of znk
-    maxzk=max(zk,[],2);
-    zk=exp(zk-maxzk);
-    sumzk=sum(zk,2);
-    gY(:,ic)=log(pc(ic))+maxzk+log(sumzk);
+    maxz=max(z,[],2);
+    z=exp(z-maxz);
+    sumz=sum(z,2);
+    gY(:,ic)=log(pc(ic))+maxz+log(sumz);
   end
 
   % Classification of training and evaluation sets and error estimation
@@ -102,7 +109,7 @@ do
   [~,idY]=max(gY');
   errY=mean(classes(idY)!=yl)*100;
   it=it+1;
-  printf("%3d %11.5f %11.5f %5.2f %5.2f\n",it,oL,L,errX,errY);
+  %printf("%3d %11.5f %11.5f %5.2f %5.2f\n",it,oL,L,errX,errY);
   
 until ((L-oL)/abs(oL) < epsilon)
 end
